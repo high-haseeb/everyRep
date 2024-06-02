@@ -1,13 +1,13 @@
 'use client'
+import { Environment, MapControls } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, MapControls, useGLTF } from '@react-three/drei'
-import React, { useRef, useMemo, useEffect } from 'react'
-import * as THREE from 'three'
+import {Model} from './White'
+import React, { useRef } from 'react'
 
 const Scene = () => {
   return (
     <div className='w-full h-full'>
-      <Canvas camera={{ position: [0, 100, 0], zoom: 0.5 }}>
+      <Canvas camera={{ position: [0, 200, 0] }}>
         <Environment preset='city' />
         <InfinitePlane />
       </Canvas>
@@ -16,61 +16,34 @@ const Scene = () => {
 }
 
 const InfinitePlane = () => {
-  const { nodes, materials } = useGLTF('/white.glb')
   const { camera } = useThree()
-  const instancedMeshRef = useRef()
-  const numPlanes = 4
-  const spacing = 200
-
-  const dummy = useMemo(() => new THREE.Object3D(), [])
-
-  const positions = useMemo(() => {
-    const positions = []
-    for (let i = 0; i < numPlanes; i++) {
-      positions.push(0, 0, i * spacing)
-    }
-    return positions
-  }, [numPlanes, spacing])
+  const planesRef = useRef([])
+  const numPlanes = 7
+  const planeSize = 200
 
   useFrame(() => {
-    const mesh = instancedMeshRef.current
-    for (let i = 0; i < numPlanes; i++) {
-      const position = new THREE.Vector3().fromArray(positions, i * 3)
-      if (camera.position.z > position.z + spacing / 2) {
-        position.z += spacing * numPlanes;
-        positions[i * 3 + 2] = position.z;
+    planesRef.current.forEach((plane, index) => {
+      if (camera.position.z > plane.position.z + planeSize / 2) {
+        plane.position.z += planeSize * numPlanes
       }
-      if (camera.position.z < position.z - spacing / 2) {
-        position.z -= spacing * numPlanes
-        positions[i * 3 + 2] = position.z
+      if (camera.position.z < plane.position.z - planeSize / 2) {
+        plane.position.z -= planeSize * numPlanes
       }
-      dummy.position.copy(position)
-      // dummy.rotation.set(-Math.PI / 2, 0, 0)
-      dummy.updateMatrix()
-      mesh.setMatrixAt(i, dummy.matrix)
-    }
-    mesh.instanceMatrix.needsUpdate = true
+    })
   })
-
-  useEffect(() => {
-    const mesh = instancedMeshRef.current
-    for (let i = 0; i < numPlanes; i++) {
-      const position = new THREE.Vector3().fromArray(positions, i * 3)
-      dummy.position.copy(position)
-      dummy.rotation.set(-Math.PI / 2, 0, 0)
-      dummy.updateMatrix()
-      mesh.setMatrixAt(i, dummy.matrix)
-    }
-    mesh.instanceMatrix.needsUpdate = true
-  }, [positions, dummy, numPlanes])
 
   return (
     <>
-      <MapControls enableRotate={false} enableZoom={false} minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 4} />
-      <instancedMesh ref={instancedMeshRef} args={[null, null, numPlanes]}>
-        <bufferGeometry attach="geometry" {...nodes.Plane001.geometry} />
-        <meshStandardMaterial attach="material" {...materials['16 - Default']} />
-      </instancedMesh>
+      <MapControls minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 4} enableRotate={false} />
+      {Array.from({ length: numPlanes }).map((_, index) => (
+        <mesh
+          key={index}
+          position={[0, 0, index * planeSize]}
+          ref={(el) => (planesRef.current[index] = el)}
+        >
+          <Model/>
+        </mesh>
+      ))}
     </>
   )
 }
