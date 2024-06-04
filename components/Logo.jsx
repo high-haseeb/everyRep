@@ -1,19 +1,31 @@
 import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
+import { useStateStore } from "@/stores/state";
 
-export function Model(props) {
+export function Intro(props) {
   const group = useRef();
   const { nodes, materials, animations } = useGLTF("/intor.glb");
   const { actions } = useAnimations(animations, group);
+  const {setIntroDone, introDone} = useStateStore();
+  
+  // play the animation
   useEffect(() => {
-    console.log(actions);
     for (const key in actions) {
-      actions[key].loop = THREE.LoopOnce;
-      actions[key].clampWhenFinished = true
-      actions[key].play();
+      const action = actions[key];
+      action.loop = THREE.LoopOnce;
+      action.clampWhenFinished = true;
+      action.play();
     }
-  });
+  }, []);
+
+  // intro done flag
+  useFrame(() => {
+    if(!introDone){
+      setIntroDone(!actions["Shape1Action.002"].isRunning());
+    }
+  })
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">

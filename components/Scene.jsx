@@ -1,39 +1,61 @@
 "use client";
 import { Environment, MapControls, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Model } from "./Logo";
+import { Intro } from "./Logo";
+import { Model } from "./White";
 import PanControls from "./PanControls";
 import React, { useEffect, useRef } from "react";
-import {BoundingBox} from 'three'
+import { BoundingBox } from "three";
+import { useStateStore } from "@/stores/state";
 
 const Scene = () => {
+  const introDone = useStateStore((state) => state.introDone);
+  useEffect(() => {
+    console.log(introDone)
+  }, [introDone])
   return (
-    <div className="w-full h-full">
-      <Canvas>
+    <div className="w-full h-full bg-white">
+      <Canvas className="bg-white">
         <Environment preset="city" />
-        <OrbitControls/>
-        <Model scale={20} rotation={[Math.PI / 2, 0,0]}/>
-        {/* <MapControls /> */}
+        {/* <OrbitControls /> */}
+        <MapControls/>
+        {
+          introDone ? <Model/> : <Intro scale={20} rotation={[Math.PI / 2, 0, 0]} />
+        }
       </Canvas>
     </div>
   );
 };
-function MovingPlane  ()  {
+function MovingPlane() {
   const modelRef = useRef();
-  const {camera} = useThree();
-  useFrame(() => {
-    if(camera.position.z > modelRef.current.geometry.boundingBox.max.y || camera.position.z < modelRef.current.geometry.boundingBox.min.y){
-      console.log('moved over')
-      modelRef.current.position.z = 2 * (modelRef.current.geometry.boundingBox.max.y + modelRef.current.geometry.boundingBox.min.y)
-    }
-  })
-  useEffect(() => {
-    if(modelRef.current){
-      console.log(modelRef.current.geometry.boundingBox.max, modelRef.current.geometry.boundingBox.min)
-    }
-  },[modelRef.current])
-  return <Model ref={modelRef} />;
-};
+  const { camera } = useThree();
+  // useFrame(() => {
+  //   if (
+  //     camera.position.z > modelRef.current.geometry.boundingBox.max.y ||
+  //     camera.position.z < modelRef.current.geometry.boundingBox.min.y
+  //   ) {
+  //     console.log("moved over");
+  //     modelRef.current.position.z =
+  //       2 *
+  //       (modelRef.current.geometry.boundingBox.max.y +
+  //         modelRef.current.geometry.boundingBox.min.y);
+  //   }
+  // });
+  // useEffect(() => {
+  //   if (modelRef.current) {
+  //     console.log(
+  //       modelRef.current.geometry.boundingBox.max,
+  //       modelRef.current.geometry.boundingBox.min,
+  //     );
+  //   }
+  // }, [modelRef.current]);
+  return (
+    <mesh>
+      <boxGeometry />
+      <meshStandardMaterial />
+    </mesh>
+  );
+}
 
 const InfinitePlane = () => {
   const { camera } = useThree();
@@ -66,7 +88,7 @@ const InfinitePlane = () => {
           rotation={[0, Math.PI * index, 0]}
           ref={(el) => (planesRef.current[index] = el)}
         >
-          <Model />
+          <Intro />
         </mesh>
       ))}
     </>
