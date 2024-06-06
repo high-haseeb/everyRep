@@ -38,7 +38,7 @@ const Scene = () => {
   );
 };
 const Model = () => {
-  const { nodes, materials } = useGLTF("/dna.glb");
+  const { nodes, materials } : {nodes: any, materials :any}= useGLTF("/dna.glb");
 
   const geometry = new THREE.BufferGeometry();
   const dna_geo = nodes.Mesh001.geometry;
@@ -101,26 +101,45 @@ void main() {
   points.scale.set(0.1, 0.1, 0.1);
   const rand_range = (min: number, max: number) =>
     Math.random() * (max - min) + min;
-  useFrame(() => {
-    // console.log(rand_range(-10, 10))
- const positions = geometry.attributes.position.array;
-  const dnaPositions = dna_geo.attributes.position.array;
 
-  for (let index = 0; index < positions.length; index += 3) {
-    // For each vertex, find the corresponding range in dna_geo
+  const positions = geometry.attributes.position.array;
+  
+  const dnaGeo = new THREE.SphereGeometry(4);//.attributes.positions.array;
+  const dnaPositions = dnaGeo.attributes.position.array
+   // Calculate min and max for x, y, and z
+  const xPositions = [];
+  const yPositions = [];
+  const zPositions = [];
 
-    const xMin = Math.min(dnaPositions[index], dnaPositions[index + 3 % dnaPositions.length]);
-    const xMax = Math.max(dnaPositions[index], dnaPositions[index + 3 % dnaPositions.length]);
-    const yMin = Math.min(dnaPositions[index + 1], dnaPositions[index + 4 % dnaPositions.length]);
-    const yMax = Math.max(dnaPositions[index + 1], dnaPositions[index + 4 % dnaPositions.length]);
-    const zMin = Math.min(dnaPositions[index + 2], dnaPositions[index + 5 % dnaPositions.length]);
-    const zMax = Math.max(dnaPositions[index + 2], dnaPositions[index + 5 % dnaPositions.length]);
-
-    // Assign new positions within the ranges
-    positions[index] = rand_range(xMin, xMax);
-    positions[index + 1] = rand_range(yMin, yMax);
-    positions[index + 2] = rand_range(zMin, zMax);
+  for (let i = 0; i < dnaPositions.length; i += 3) {
+    xPositions.push(dnaPositions[i]);
+    yPositions.push(dnaPositions[i + 1]);
+    zPositions.push(dnaPositions[i + 2]);
   }
+
+  const xMin = Math.min(...xPositions);
+  const xMax = Math.max(...xPositions);
+  const yMin = Math.min(...yPositions);
+  const yMax = Math.max(...yPositions);
+  const zMin = Math.min(...zPositions);
+  const zMax = Math.max(...zPositions);
+  const delta = 0.01;
+  useFrame(() => {
+    for (let index = 0; index < positions.length; index += 3) {
+      let dx = rand_range(-1, 1);
+      let dy = rand_range(-1, 1);
+      let dz = rand_range(-1, 1);
+      if(positions[index + 0] + dx < xMax && positions[index + 0] + dx > xMin){
+        positions[index + 0] += dx;
+      }else { dx *= -1 }
+
+      if(positions[index + 1] + dy < yMax && positions[index + 1] + dy > yMin){
+        positions[index + 1] += dy;
+      }else { dy *= -1 }
+      if(positions[index + 2] + dz < zMax && positions[index + 2] + dz > zMin){
+        positions[index + 2] += dz;
+      }else { dz *= -1 }
+    }
     geometry.attributes.position.needsUpdate = true;
   });
   // console.log(geometry.attributes.position.array);
