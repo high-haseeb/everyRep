@@ -22,11 +22,11 @@ const Scene = () => {
         <Environment preset="city" />
         {/* <directionalLight /> */}
         <OrbitControls />
-        {/* {introDone ? ( */}
-        <InfinitePlane />
-        {/* ) : ( */}
-        {/*   <Intro scale={20} rotation={[Math.PI / 2, 0, 0]} /> */}
-        {/* )} */}
+        {introDone ? (
+          <InfinitePlane />
+        ) : (
+          <Intro scale={20} rotation={[Math.PI / 2, 0, 0]} />
+        )}
       </Canvas>
     </div>
   );
@@ -65,8 +65,8 @@ const InfinitePlane = () => {
       }
     });
   });
-  
-  return(
+
+  return (
     <group>
       {Array.from({ length: numPlanes }).map((_, index) => (
         <group>
@@ -77,10 +77,7 @@ const InfinitePlane = () => {
             ref={(el) => (planesRef.current[index] = el)}
             geometry={nodes.Plane001.geometry}
           >
-            <meshStandardMaterial
-              map={tex}
-              side={THREE.DoubleSide}
-            />
+            <meshStandardMaterial map={tex} side={THREE.DoubleSide} />
           </mesh>
 
           <mesh
