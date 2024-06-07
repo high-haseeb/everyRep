@@ -1,15 +1,26 @@
 "use client";
+import React, { useEffect, useRef } from "react";
 import {
   Environment,
+  Loader,
+  MapControls,
   OrbitControls,
+  Stats,
   useGLTF,
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Intro } from "./Logo";
-import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
 import { useStateStore } from "@/stores/state";
+import * as THREE from "three";
+
+import PanControls from "@/components/PanControls";
+import Artifact from "@/components/Artifact";
+import { Intro } from "./Logo";
+import {
+  Bloom,
+  DepthOfField,
+  EffectComposer,
+} from "@react-three/postprocessing";
 
 const Scene = () => {
   const introDone = useStateStore((state) => state.introDone);
@@ -18,15 +29,23 @@ const Scene = () => {
   }, [introDone]);
   return (
     <div className="w-full h-full bg-black">
-      <Canvas>
+      <Loader />
+      <Canvas camera={{ zoom: 4 }}>
         <Environment preset="city" />
         {/* <directionalLight /> */}
-        <OrbitControls />
         {introDone ? (
-          <InfinitePlane />
+          <>
+            <PanControls />
+            <InfinitePlane />
+            <Artifact />
+          </>
         ) : (
-          <Intro scale={20} rotation={[Math.PI / 2, 0, 0]} />
+          <Intro scale={10} rotation={[Math.PI / 2, 0, 0]} />
         )}
+        <Stats />
+        <EffectComposer>
+          {/* <Bloom luminanceThreshold={0.7} intensity={0.23} height={300} /> */}
+        </EffectComposer>
       </Canvas>
     </div>
   );
@@ -34,28 +53,15 @@ const Scene = () => {
 
 const InfinitePlane = () => {
   const { camera } = useThree();
-  const Y_OFFSET = 4;
-  const Z_OFFSET = Y_OFFSET - 1;
 
-  useEffect(() => {
-    camera.position.set(-2, Y_OFFSET, 0);
-    console.log("INFO: camera position set to ", camera.position);
-  }, []);
-  //
-  useFrame(({ pointer }) => {
-    camera.position.z -= pointer.x;
-    camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - Z_OFFSET));
-  });
-
-  const tex = useTexture("/black_tex.jpg");
-  const { nodes, _materials } = useGLTF("/cloth.glb");
+  const tex = useTexture("/images/black_tex.jpg");
+  const { nodes, _materials } = useGLTF("/models/cloth.glb");
 
   const planesRef = useRef([]);
   const numPlanes = 4;
   const planeSize = 20;
-  // const box = useRef();
 
-  useFrame(({ pointer }) => {
+  useFrame(() => {
     planesRef.current.forEach((plane, _index) => {
       if (camera.position.z > plane.position.z + planeSize / 2) {
         plane.position.z += planeSize * numPlanes;
@@ -66,28 +72,31 @@ const InfinitePlane = () => {
     });
   });
 
+  // TODO: make this instancd mesh
   return (
     <group>
       {Array.from({ length: numPlanes }).map((_, index) => (
-        <group>
+        <group
+          position={[0, 0, index * planeSize]}
+          ref={(el) => (planesRef.current[index] = el)}
+        >
           <mesh
             key={index}
             rotation={[0, Math.PI, 0]}
-            position={[0, 0, index * planeSize]}
-            ref={(el) => (planesRef.current[index] = el)}
             geometry={nodes.Plane001.geometry}
           >
             <meshStandardMaterial map={tex} side={THREE.DoubleSide} />
           </mesh>
+          <Artifact />
 
-          <mesh
-            rotation={[0, -Math.PI / 2, 0]}
-            position={[21, 0, index * planeSize]}
-            ref={(el) => (planesRef.current[index + numPlanes] = el)}
-            geometry={nodes.Plane001.geometry}
-          >
-            <meshStandardMaterial map={tex} side={THREE.DoubleSide} />
-          </mesh>
+          {/* <mesh */}
+          {/*   rotation={[0, -Math.PI / 2, 0]} */}
+          {/*   position={[21, 0, index * planeSize]} */}
+          {/*   ref={(el) => (planesRef.current[index + numPlanes] = el)} */}
+          {/*   geometry={nodes.Plane001.geometry} */}
+          {/* > */}
+          {/*   <meshStandardMaterial map={tex} side={THREE.DoubleSide} /> */}
+          {/* </mesh> */}
         </group>
       ))}
     </group>
