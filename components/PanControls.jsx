@@ -13,9 +13,9 @@ export default function PanControls() {
   // const y = 5.69;
   // const z = 15.4;
   const { x, y, z } = useControls({
-    x: { value: 2, min: -10, max: 10 },
-    y: { value: 2, min: 1, max: 10 },
-    z: { value: 2, min: 1, max: 20 },
+    x: { value: -3, min: -10, max: 10 },
+    y: { value: 6, min: 1, max: 20 },
+    z: { value: 15, min: 1, max: 40 },
   });
   //
   // TODO: enable scroll controls
