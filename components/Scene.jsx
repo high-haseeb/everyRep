@@ -102,5 +102,6 @@ const InfinitePlane = () => {
     </group>
   );
 };
+useGLTF.preload("/models/cloth.glb")
 
 export default Scene;
