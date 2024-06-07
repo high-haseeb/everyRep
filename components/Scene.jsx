@@ -21,6 +21,7 @@ import {
   DepthOfField,
   EffectComposer,
 } from "@react-three/postprocessing";
+import { useControls } from "leva";
 
 const Scene = () => {
   const introDone = useStateStore((state) => state.introDone);
@@ -54,7 +55,14 @@ const Scene = () => {
 const InfinitePlane = () => {
   const { camera } = useThree();
 
-  const tex = useTexture("/images/black_tex.jpg");
+  const { color, texRepeat } = useControls({
+    color: { value: "white", options: ["white", "black"] },
+    texRepeat: { value: 1, min: 1, max: 4, step: 0.1 },
+  });
+  const tex = useTexture(`/images/${color}_tex.jpg`);
+  tex.repeat = new THREE.Vector2(texRepeat, texRepeat);
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
   const { nodes, _materials } = useGLTF("/models/cloth.glb");
 
   const planesRef = useRef([]);
@@ -102,6 +110,8 @@ const InfinitePlane = () => {
     </group>
   );
 };
-useGLTF.preload("/models/cloth.glb")
+useGLTF.preload("/models/cloth.glb");
+useTexture.preload('/images/white_tex.jpg')
+useTexture.preload('/images/black_tex.jpg')
 
 export default Scene;

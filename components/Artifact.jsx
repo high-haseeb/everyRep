@@ -4,7 +4,6 @@ import React, { useRef } from "react";
 import { DoubleSide } from "three";
 
 const Artifact = () => {
-  const NUM_ART = 4;
   const positions = [
     [1, 0.5, 7],
     [1, 0.6, 0],
@@ -30,4 +29,5 @@ const Artifact = () => {
   );
 };
 
+useTexture.preload('/images/cat.jpg')
 export default Artifact;
