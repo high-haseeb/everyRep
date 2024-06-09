@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      animation: {
+        scaleDown : 'scaleDown 1s ease-in-out infinite'
+      }
     },
   },
   plugins: [],
