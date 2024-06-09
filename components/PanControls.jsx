@@ -10,13 +10,8 @@ export default function PanControls() {
   const { camera } = useThree();
   // experimentally found values
   const x = 0.4;
-  const y = 7;
+  const y = 9;
   const z = 29;
-  // const { x, y, z } = useControls({
-  //   x: { value: -3, min: -10, max: 10 },
-  //   y: { value: 6, min: 1, max: 20 },
-  //   z: { value: 15, min: 1, max: 40 },
-  // });
   //
   // TODO: enable scroll controls
   // const {camera, gl} = useThree();

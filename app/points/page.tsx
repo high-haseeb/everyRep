@@ -14,32 +14,29 @@ const Page = () => {
 };
 const Scene = () => {
   return (
-    <><Loader/>
-    <Canvas className="w-full h-full" camera={{position: [0, 0, -100]}}>
-      <OrbitControls />
-      {/* <directionalLight color={'lime'} position={[0, 0, 0]} intensity={10.0}/> */}
-      <Model />
-      <EffectComposer>
-        <Bloom
-          intensity={1.0}
-          luminanceThreshold={0.9}
-          luminanceSmoothing={0.025}
-          mipmapBlur={false}
-        />
-      </EffectComposer>
-      {/* <mesh> */}
-      {/*   <sphereGeometry args={[0.1]} /> */}
-      {/*   <meshStandardMaterial */}
-      {/*     color={"lime"} */}
-      {/*     emissive={"orange"} */}
-      {/*     emissiveIntensity={2.0} */}
-      {/*   /> */}
-      {/* </mesh> */}
-    </Canvas></>
+    <>
+      <Loader />
+      <Canvas className="w-full h-full" camera={{ position: [0, 0, -100] }}>
+        <OrbitControls />
+        {/* <directionalLight color={'lime'} position={[0, 0, 0]} intensity={10.0}/> */}
+        <Model />
+        <EffectComposer>
+          <Bloom intensity={1.0} luminanceThreshold={0.9} luminanceSmoothing={0.025} mipmapBlur={false} />
+        </EffectComposer>
+        {/* <mesh> */}
+        {/*   <sphereGeometry args={[0.1]} /> */}
+        {/*   <meshStandardMaterial */}
+        {/*     color={"lime"} */}
+        {/*     emissive={"orange"} */}
+        {/*     emissiveIntensity={2.0} */}
+        {/*   /> */}
+        {/* </mesh> */}
+      </Canvas>
+    </>
   );
 };
 const Model = () => {
-  const { nodes, materials } : {nodes: any, materials :any}= useGLTF("/models/dna.glb");
+  const { nodes, materials }: { nodes: any; materials: any } = useGLTF("/models/dna.glb");
 
   const geometry = new THREE.BufferGeometry();
   const dna_geo = nodes.Mesh001.geometry;
@@ -52,10 +49,7 @@ const Model = () => {
     vertices[index] = Math.random() * 2.0 - 1.0;
   }
 
-  geometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(vertices, 3),
-  );
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
   // Vertex Shader
   const vertexShader = `
  float pointSize = 50.0;
@@ -100,14 +94,13 @@ void main() {
 
   const points = new THREE.Points(geometry, material);
   points.scale.set(0.1, 0.1, 0.1);
-  const rand_range = (min: number, max: number) =>
-    Math.random() * (max - min) + min;
+  const rand_range = (min: number, max: number) => Math.random() * (max - min) + min;
 
   const positions = geometry.attributes.position.array;
-  
-  const dnaGeo = new THREE.SphereGeometry(4);//.attributes.positions.array;
-  const dnaPositions = dnaGeo.attributes.position.array
-   // Calculate min and max for x, y, and z
+
+  const dnaGeo = new THREE.SphereGeometry(4); //.attributes.positions.array;
+  const dnaPositions = dnaGeo.attributes.position.array;
+  // Calculate min and max for x, y, and z
   const xPositions = [];
   const yPositions = [];
   const zPositions = [];
@@ -126,25 +119,24 @@ void main() {
   const zMax = Math.max(...zPositions);
   const delta = 0.01;
   useFrame(() => {
+    const positions = geometry.attributes.position.array;
+    const dnaPositions = dna_geo.attributes.position.array;
 
-  const positions = geometry.attributes.position.array;
-  const dnaPositions = dna_geo.attributes.position.array;
+    for (let index = 0; index < positions.length; index += 3) {
+      // For each vertex, find the corresponding range in dna_geo
 
-  for (let index = 0; index < positions.length; index += 3) {
-    // For each vertex, find the corresponding range in dna_geo
+      const xMin = Math.min(dnaPositions[index], dnaPositions[index + (3 % dnaPositions.length)]);
+      const xMax = Math.max(dnaPositions[index], dnaPositions[index + (3 % dnaPositions.length)]);
+      const yMin = Math.min(dnaPositions[index + 1], dnaPositions[index + (4 % dnaPositions.length)]);
+      const yMax = Math.max(dnaPositions[index + 1], dnaPositions[index + (4 % dnaPositions.length)]);
+      const zMin = Math.min(dnaPositions[index + 2], dnaPositions[index + (5 % dnaPositions.length)]);
+      const zMax = Math.max(dnaPositions[index + 2], dnaPositions[index + (5 % dnaPositions.length)]);
 
-    const xMin = Math.min(dnaPositions[index], dnaPositions[index + 3 % dnaPositions.length]);
-    const xMax = Math.max(dnaPositions[index], dnaPositions[index + 3 % dnaPositions.length]);
-    const yMin = Math.min(dnaPositions[index + 1], dnaPositions[index + 4 % dnaPositions.length]);
-    const yMax = Math.max(dnaPositions[index + 1], dnaPositions[index + 4 % dnaPositions.length]);
-    const zMin = Math.min(dnaPositions[index + 2], dnaPositions[index + 5 % dnaPositions.length]);
-    const zMax = Math.max(dnaPositions[index + 2], dnaPositions[index + 5 % dnaPositions.length]);
-
-    // Assign new positions within the ranges
-    positions[index] = rand_range(xMin, xMax);
-    positions[index + 1] = rand_range(yMin, yMax);
-    positions[index + 2] = rand_range(zMin, zMax);
-  }
+      // Assign new positions within the ranges
+      positions[index] = rand_range(xMin, xMax);
+      positions[index + 1] = rand_range(yMin, yMax);
+      positions[index + 2] = rand_range(zMin, zMax);
+    }
     geometry.attributes.position.needsUpdate = true;
   });
   // console.log(geometry.attributes.position.array);

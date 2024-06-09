@@ -7,7 +7,7 @@ import { MeshBasicMaterial } from "three";
 
 export function Intro(props) {
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/models/intro.glb");
+  const { nodes, _, animations } = useGLTF("/models/intro.glb");
   const { actions } = useAnimations(animations, group);
   const {setIntroDone, introDone} = useStateStore();
   
