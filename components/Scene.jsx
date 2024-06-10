@@ -18,7 +18,7 @@ import fragMain from "./shaders/fragMain.glsl";
 
 const Scene = () => {
   const introDone = useStateStore((state) => state.introDone);
-
+  const section = useStateStore(state => state.section)
   return (
     <div className="w-full h-full bg-black">
       <Loader />
@@ -30,7 +30,7 @@ const Scene = () => {
         <spotLight position={[0, 4, 0]} />
         {introDone ? (
           <>
-            <fog attach={"fog"} color={"black"} near={1} far={90} />
+            <fog attach={"fog"} color={section === 'black' ? 'black' : section === 'white' ? 'white' : 'gray'} near={1} far={90} />
             <ambientLight intensity={1} />
             <InfinitePlane />
           </>
