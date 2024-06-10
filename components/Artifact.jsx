@@ -29,5 +29,4 @@ const Artifact = () => {
   );
 };
 
-useTexture.preload('/images/cat.jpg')
 export default Artifact;

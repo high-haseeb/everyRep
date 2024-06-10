@@ -89,21 +89,21 @@ void main() {
 
   const dnaGeo = new THREE.SphereGeometry(4); //.attributes.positions.array;
   const dnaPositions = dnaGeo.attributes.position.array;
-  // Calculate min and max for x, y, and z
+
   const xPositions = [];
   const yPositions = [];
   const zPositions = [];
 
   for (let i = 0; i < dnaPositions.length; i += 3) {
-    xPositions.push(dnaPositions[i]);
+    xPositions.push(dnaPositions[i + 0]);
     yPositions.push(dnaPositions[i + 1]);
     zPositions.push(dnaPositions[i + 2]);
   }
   const src = geometry.attributes.position.array;
   const dst = dna_geo.attributes.position.array;
+
   const init_pos = () => {
     for (let i = 0; i < src.length; i += 3 * 3) {
-      // For each vertex, find the corresponding range in dna_geo
       const xMin = Math.min(dst[i + 0], dst[i + 3]);
       const xMax = Math.max(dst[i + 0], dst[i + 3]);
       const yMin = Math.min(dst[i + 1], dst[i + 4]);
@@ -127,7 +127,6 @@ void main() {
     }
     geometry.attributes.position.needsUpdate = true;
   });
-  // console.log(geometry.attributes.position.array);
 
   return <primitive object={points} />;
 };

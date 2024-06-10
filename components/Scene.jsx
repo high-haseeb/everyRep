@@ -26,13 +26,14 @@ const Scene = () => {
   return (
     <div className="w-full h-full bg-black">
       <Loader />
-      {introDone && <Overlay /> }
+      {introDone && <Overlay />}
       <Canvas camera={{ zoom: 4 }} scene={{ background: new THREE.Color(0x000) }}>
-        <Environment preset="city" environmentIntensity={0.4}/>
-        <directionalLight position={[0, 4, 0]} />
+        <Environment preset="city" environmentIntensity={0.4} />
+        {/* <directionalLight position={[0, 4, 0]} intensity={1} /> */}
+        <spotLight position={[0, 4, 0]} />
         {introDone ? (
           <>
-            <fog attach={'fog'} color={'white'} near={1} far={100}/>
+            <fog attach={"fog"} color={"white"} near={1} far={100} />
             <ambientLight intensity={1} />
             <PanControls />
             <InfinitePlane />
@@ -94,13 +95,13 @@ const InfinitePlane = () => {
   });
 
   // TODO: make this instancd mesh
+  const section = useStateStore(state => state.section);
   return (
     <group>
       {Array.from({ length: numPlanes }).map((_, index) => (
         <group position={[0, 0, index * planeSize]} ref={(el) => (planesRef.current[index] = el)}>
-          {/* <Stich rotation={[0, Math.PI, 0]} position={[0, 0.1, 0]} /> */}
           <Cloth index={index} />
-          {/* <Artifact /> */}
+          { section !== 'home' && <Artifact /> }
           <Experience />
         </group>
       ))}
@@ -109,17 +110,36 @@ const InfinitePlane = () => {
 };
 const Cloth = ({ index }) => {
   const { nodes, _materials } = useGLTF("/models/cloth.glb");
+  const section = useStateStore((state) => state.section);
 
   const white_tex = useTexture(`/images/white_tex.jpg`);
   const black_tex = useTexture(`/images/black_tex.jpg`);
 
+  useEffect(() => {
+    const shader = materialRef.current.userData.shader;
+    if (!shader) return;
+    if (section === "white") {
+      shader.uniforms.u_black.value = white_tex;
+      shader.uniforms.u_white.value = white_tex;
+    } else if (section === "black") {
+      shader.uniforms.u_white.value = black_tex;
+      shader.uniforms.u_black.value = black_tex;
+    } else {
+      shader.uniforms.u_white.value = white_tex;
+      shader.uniforms.u_black.value = black_tex;
+    }
+  }, [section]);
+
   const materialRef = useRef();
+
   return (
     <mesh key={index} rotation={[0, Math.PI, 0]} geometry={nodes.Plane001.geometry}>
-      {/* <meshStandardMaterial map={tex} side={THREE.DoubleSide} /> */}
       <meshPhysicalMaterial
         ref={materialRef}
-        // sheen={1.0}
+        roughness={1.0}
+        metalness={0.4}
+        sheen={1.0}
+        sheenColorMap={white_tex}
         onBeforeCompile={(shader) => {
           // setting up the uniforms
           materialRef.current.userData.shader = shader;
@@ -145,5 +165,6 @@ const Cloth = ({ index }) => {
 useGLTF.preload("/models/cloth.glb");
 useTexture.preload("/images/white_tex.jpg");
 useTexture.preload("/images/black_tex.jpg");
+useTexture.preload('/images/cat.jpg')
 
 export default Scene;
