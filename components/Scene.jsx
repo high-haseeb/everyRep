@@ -24,14 +24,14 @@ const Scene = () => {
       <Loader />
       {introDone && <Overlay />}
       <Canvas camera={{ zoom: 4 }} scene={{ background: new THREE.Color(0x000) }}>
+        <PanControls />
         <Environment preset="city" environmentIntensity={0.4} />
         {/* <directionalLight position={[0, 4, 0]} intensity={1} /> */}
         <spotLight position={[0, 4, 0]} />
         {introDone ? (
           <>
-            <fog attach={"fog"} color={"white"} near={1} far={100} />
+            <fog attach={"fog"} color={"black"} near={1} far={90} />
             <ambientLight intensity={1} />
-            <PanControls />
             <InfinitePlane />
           </>
         ) : (
@@ -43,10 +43,10 @@ const Scene = () => {
 };
 
 const Experience = () => {
-  const { scene } = useThree();
-  useEffect(() => {
-    scene.background.set("white");
-  }, []);
+  // const { scene } = useThree();
+  // useEffect(() => {
+  //   scene.background.set("white");
+  // }, []);
 
   return (
     <Clouds >
@@ -85,7 +85,6 @@ const InfinitePlane = () => {
       {Array.from({ length: numPlanes }).map((_, index) => (
         <group position={[0, 0, index * planeSize]} ref={(el) => (planesRef.current[index] = el)}>
           <Cloth index={index} />
-          <Experience />
           { section !== 'home' && <Artifact /> }
         </group>
       ))}
@@ -95,7 +94,6 @@ const InfinitePlane = () => {
 const Cloth = ({ index }) => {
   const { nodes, _materials } = useGLTF("/models/cloth.glb");
   const section = useStateStore((state) => state.section);
-  const isMobile = useStateStore((state) => state.isMobile);
 
   const white_tex = useTexture(`/images/white_tex.jpg`);
   const black_tex = useTexture(`/images/black_tex.jpg`);
