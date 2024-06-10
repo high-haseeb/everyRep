@@ -11,7 +11,7 @@ export default function PanControls() {
   // experimentally found values
   // const x = 0;
   const y = 9;
-  const z = 20;
+  const z = 25;
   //
   // TODO: enable scroll controls
   // const {camera, gl} = useThree();

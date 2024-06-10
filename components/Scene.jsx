@@ -53,7 +53,7 @@ const Experience = () => {
   }, []);
 
   return (
-    <Clouds>
+    <Clouds >
       <Cloud position={[10, 1, 0]} bounds={new THREE.Vector3(1, 1, 10)} opacity={0.4} />
       <Cloud position={[-10, 1, 0]} bounds={new THREE.Vector3(1, 1, 10)} opacity={0.4} />
     </Clouds>
@@ -66,18 +66,6 @@ const InfinitePlane = () => {
   useEffect(() => {
     camera.position.set(0, 40, camera.position.z);
   }, []);
-
-  // const { color, texRepeat } = useControls({
-  //   color: { value: "white", options: ["white", "black"] },
-  //   texRepeat: { value: 1, min: 1, max: 4, step: 0.1 },
-  // });
-  const color = "white";
-  const texRepeat = 1.3;
-
-  // const tex = useTexture(`/images/${color}_tex.jpg`);
-  // tex.repeat = new THREE.Vector2(texRepeat, texRepeat);
-  // tex.wrapS = THREE.RepeatWrapping;
-  // tex.wrapT = THREE.RepeatWrapping;
 
   const planesRef = useRef([]);
   const numPlanes = 4;
@@ -101,8 +89,8 @@ const InfinitePlane = () => {
       {Array.from({ length: numPlanes }).map((_, index) => (
         <group position={[0, 0, index * planeSize]} ref={(el) => (planesRef.current[index] = el)}>
           <Cloth index={index} />
-          { section !== 'home' && <Artifact /> }
           <Experience />
+          { section !== 'home' && <Artifact /> }
         </group>
       ))}
     </group>
