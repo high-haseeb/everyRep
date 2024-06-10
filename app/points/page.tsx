@@ -18,19 +18,10 @@ const Scene = () => {
       <Loader />
       <Canvas className="w-full h-full" camera={{ position: [0, 0, -100] }}>
         <OrbitControls />
-        {/* <directionalLight color={'lime'} position={[0, 0, 0]} intensity={10.0}/> */}
         <Model />
         <EffectComposer>
           <Bloom intensity={1.0} luminanceThreshold={0.9} luminanceSmoothing={0.025} mipmapBlur={false} />
         </EffectComposer>
-        {/* <mesh> */}
-        {/*   <sphereGeometry args={[0.1]} /> */}
-        {/*   <meshStandardMaterial */}
-        {/*     color={"lime"} */}
-        {/*     emissive={"orange"} */}
-        {/*     emissiveIntensity={2.0} */}
-        {/*   /> */}
-        {/* </mesh> */}
       </Canvas>
     </>
   );
@@ -96,8 +87,6 @@ void main() {
   points.scale.set(0.1, 0.1, 0.1);
   const rand_range = (min: number, max: number) => Math.random() * (max - min) + min;
 
-  const positions = geometry.attributes.position.array;
-
   const dnaGeo = new THREE.SphereGeometry(4); //.attributes.positions.array;
   const dnaPositions = dnaGeo.attributes.position.array;
   // Calculate min and max for x, y, and z
@@ -110,32 +99,31 @@ void main() {
     yPositions.push(dnaPositions[i + 1]);
     zPositions.push(dnaPositions[i + 2]);
   }
-
-  const xMin = Math.min(...xPositions);
-  const xMax = Math.max(...xPositions);
-  const yMin = Math.min(...yPositions);
-  const yMax = Math.max(...yPositions);
-  const zMin = Math.min(...zPositions);
-  const zMax = Math.max(...zPositions);
-  const delta = 0.01;
-  useFrame(() => {
-    const positions = geometry.attributes.position.array;
-    const dnaPositions = dna_geo.attributes.position.array;
-
-    for (let index = 0; index < positions.length; index += 3) {
+  const src = geometry.attributes.position.array;
+  const dst = dna_geo.attributes.position.array;
+  const init_pos = () => {
+    for (let i = 0; i < src.length; i += 3 * 3) {
       // For each vertex, find the corresponding range in dna_geo
+      const xMin = Math.min(dst[i + 0], dst[i + 3]);
+      const xMax = Math.max(dst[i + 0], dst[i + 3]);
+      const yMin = Math.min(dst[i + 1], dst[i + 4]);
+      const yMax = Math.max(dst[i + 1], dst[i + 4]);
+      const zMin = Math.min(dst[i + 2], dst[i + 5]);
+      const zMax = Math.max(dst[i + 2], dst[i + 5]);
 
-      const xMin = Math.min(dnaPositions[index], dnaPositions[index + (3 % dnaPositions.length)]);
-      const xMax = Math.max(dnaPositions[index], dnaPositions[index + (3 % dnaPositions.length)]);
-      const yMin = Math.min(dnaPositions[index + 1], dnaPositions[index + (4 % dnaPositions.length)]);
-      const yMax = Math.max(dnaPositions[index + 1], dnaPositions[index + (4 % dnaPositions.length)]);
-      const zMin = Math.min(dnaPositions[index + 2], dnaPositions[index + (5 % dnaPositions.length)]);
-      const zMax = Math.max(dnaPositions[index + 2], dnaPositions[index + (5 % dnaPositions.length)]);
+      src[i + 0] = rand_range(xMin, xMax);
+      src[i + 1] = rand_range(yMin, yMax);
+      src[i + 2] = rand_range(zMin, zMax);
+    }
+    geometry.attributes.position.needsUpdate = true;
+  };
+  init_pos();
 
-      // Assign new positions within the ranges
-      positions[index] = rand_range(xMin, xMax);
-      positions[index + 1] = rand_range(yMin, yMax);
-      positions[index + 2] = rand_range(zMin, zMax);
+  useFrame((_state, delta) => {
+    for (let i = 0; i < src.length; i += 3 * 3) {
+      src[i + 0] += Math.random() * delta;
+      src[i + 1] += Math.random() * delta;
+      src[i + 2] += Math.random() * delta;
     }
     geometry.attributes.position.needsUpdate = true;
   });
