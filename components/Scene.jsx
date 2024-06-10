@@ -19,10 +19,6 @@ import fragMain from "./shaders/fragMain.glsl";
 const Scene = () => {
   const introDone = useStateStore((state) => state.introDone);
 
-  useEffect(() => {
-    console.log(introDone);
-  }, [introDone]);
-
   return (
     <div className="w-full h-full bg-black">
       <Loader />
@@ -99,12 +95,15 @@ const InfinitePlane = () => {
 const Cloth = ({ index }) => {
   const { nodes, _materials } = useGLTF("/models/cloth.glb");
   const section = useStateStore((state) => state.section);
+  const isMobile = useStateStore((state) => state.isMobile);
 
   const white_tex = useTexture(`/images/white_tex.jpg`);
   const black_tex = useTexture(`/images/black_tex.jpg`);
 
+  const materialRef = useRef();
+  const shader = materialRef.current?.userData.shader;
+
   useEffect(() => {
-    const shader = materialRef.current.userData.shader;
     if (!shader) return;
     if (section === "white") {
       shader.uniforms.u_black.value = white_tex;
@@ -116,9 +115,8 @@ const Cloth = ({ index }) => {
       shader.uniforms.u_white.value = white_tex;
       shader.uniforms.u_black.value = black_tex;
     }
-  }, [section]);
+  }, [section, shader]);
 
-  const materialRef = useRef();
 
   return (
     <mesh key={index} rotation={[0, Math.PI, 0]} geometry={nodes.Plane001.geometry}>
@@ -133,6 +131,7 @@ const Cloth = ({ index }) => {
           materialRef.current.userData.shader = shader;
           shader.uniforms.u_white = { value: white_tex };
           shader.uniforms.u_black = { value: black_tex };
+          shader.uniforms.isMobile = { value: window.innerWidth < 600 }
 
           // injecting vertex and fragment shaders
           const parseVertexString = `#include <displacementmap_pars_vertex>`;

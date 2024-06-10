@@ -4,13 +4,13 @@ interface State {
   introDone: boolean;
   section: string;
   setSection: (section: string) => void;
-  setIntroDone : (isDone: boolean) => void;
+  setIntroDone: (introDone: boolean) => void;
 }
 
 export const useStateStore = create<State>()((set) => ({
-  introDone : false,
+  introDone: false,
   section: 'home',
 
-  setIntroDone: (isDone) => set({ introDone: isDone }),
+  setIntroDone: (introDone) => set({ introDone }),
   setSection: (section) => set({ section })
 }));

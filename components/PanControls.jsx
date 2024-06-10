@@ -2,7 +2,6 @@
 import { useStateStore } from "@/stores/state";
 import { MapControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useControls } from "leva";
 import { useEffect, useState } from "react";
 import * as THREE from "three";
 import { lerp } from "three/src/math/MathUtils.js";

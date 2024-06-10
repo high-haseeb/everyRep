@@ -29,7 +29,7 @@ export function Intro(props) {
   })
   const white_mat = new MeshBasicMaterial({color: 'white'});
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} {...props} dispose={null} position={[0, 0, window.innerWidth < 600 ? -10: 0]}>
       <group name="Scene">
         <mesh name="Shape1" geometry={nodes.Shape1.geometry} material={white_mat} position={[-10, 0, 0]} rotation={[Math.PI / 2, 0, -Math.PI]} scale={0} />
         <mesh name="Curve002" geometry={nodes.Curve002.geometry} material={white_mat} position={[-0.362, 0, -0.009]} />
