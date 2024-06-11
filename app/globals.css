@@ -12,21 +12,16 @@
   -webkit-text-fill-color: white;
 }
 
-.black:hover{
+.black:hover {
   -webkit-text-fill-color: black;
+  /* linear-gradient(45deg, blue, red); */
 }
 
-svg{
-  font   : bold 90px Inter, Arial;
-  width  : 100%;
-  height : 120px;
+svg {
+  font:
+    bold 90px Inter,
+    Arial;
+  width: 100%;
+  height: 120px;
 }
 
-
-text{
-  fill            : none;
-  stroke          : white;
-  stroke-width    : 5px;
-  stroke-linejoin :round;
-  animation       : 2s pulsate infinite;
-}

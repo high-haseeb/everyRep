@@ -11,9 +11,9 @@ export default function PanControls() {
   const introDone = useStateStore((state) => state.introDone);
   // experimentally found values
   // const x = 0;
-  // const y = 9;
-  // const z = 25;
-  const {y, z} = useControls({y: {value: 9, min: -10, max: 10}, z: {value: 25, min: -100, max: 100}})
+  const y = 3.8;
+  const z = 21;
+  // const {y, z} = useControls({y: {value: 9, min: -10, max: 10}, z: {value: 25, min: -100, max: 100}})
   //
   // TODO: enable scroll controls
   // const {camera, gl} = useThree();
