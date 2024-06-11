@@ -28,7 +28,7 @@ export default function PanControls() {
   const [x, setX] = useState(0);
   const section = useStateStore((state) => state.section);
   const { camera } = useThree();
-  const xOffest = 4;
+  const xOffest = 2;
 
   useEffect(() => {
     if (introDone) {

@@ -13,13 +13,6 @@ const Overlay = () => {
         {section === "home" ? (
           <>
 
-            <Image
-              src={"/images/logo_main.svg"}
-              width={200}
-              height={100}
-              alt="logo"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 lg:w-40 mix-blend-difference bg-transparent "
-            />
             <div className="cursor-pointer">
               <div
                 className="absolute top-1/4 left-1/2 -translate-x-1/2 lg:left-1/4 pointer-events-auto text-white flex items-center justify-center flex-col"

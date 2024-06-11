@@ -5,6 +5,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useStateStore } from "@/stores/state";
 import * as THREE from "three";
 
+import Image from 'next/image'
+
 import PanControls from "@/components/PanControls";
 import { Stich } from "@/components/Stich";
 import Artifact from "@/components/Artifact";
@@ -21,6 +23,13 @@ const Scene = () => {
   const section = useStateStore(state => state.section)
     return (
       <div className="w-full h-full bg-black">
+            <Image
+              src={"/images/logo_main.svg"}
+              width={200}
+              height={100}
+              alt="logo"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 lg:w-40 mix-blend-difference bg-transparent z-50 "
+            />
         <Loader />
         {introDone && <Overlay />}
         <Canvas camera={{ zoom: 4 }} scene={{ background: new THREE.Color(0x000) }}>

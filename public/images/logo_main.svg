@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 
 <svg
    width="81.362808mm"
@@ -14,8 +12,6 @@
    xmlns:svg="http://www.w3.org/2000/svg"><defs
      id="defs1" />
 
-  <!-- Use the gradient to fill a square -->
-  <rect x="0" y="0" width="100" height="100" fill="url(#diagonalGradient)"/>
 
      <g
      id="layer1"
@@ -25,4 +21,7 @@
          d="m 433.502,125.022 h 7.903 c 30.837,0 55.836,-24.998 55.836,-55.836 0,-30.837 -24.999,-55.835 -55.836,-55.835 H 229.19 l 36.483,35.026 h 175.732 v 0.07 c 11.454,0 20.739,9.285 20.739,20.739 0,11.454 -9.285,20.739 -20.739,20.739 v 0.07 H 218.728 l 36.483,35.027 h 124.705 l 81.99,78.204 53.874,-0.054 z"
          id="path1" /><polygon
          points="208.267,168.172 244.749,203.199 398.64,203.199 361.664,168.172 "
-         id="polygon1" /></g></g></svg>
+         id="polygon1" />
+         </g>
+         </g>
+         </svg>

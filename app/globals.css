@@ -8,6 +8,15 @@
   -webkit-text-stroke: 2px;
 }
 
+/* .outlineT { */
+/*     font-weight: bolder;  */
+/*     text-shadow:  */
+/*         -1px -1px 0 black, */
+/*         -1px 1px 0 black, */
+/*         1px -1px 0 black, */
+/*         1px 1px 0 black; */
+/* } */
+
 .white:hover {
   -webkit-text-fill-color: white;
 }
