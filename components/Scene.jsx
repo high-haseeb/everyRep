@@ -7,8 +7,8 @@ import * as THREE from "three";
 
 import Image from "next/image";
 
-import PanControls from "@/components/PanControls";
 import Artifact from "@/components/Artifact";
+import PanControls from "@/components/PanControls";
 import { Intro } from "./Logo";
 import Overlay from "./Overlay";
 
@@ -42,7 +42,7 @@ const Scene = () => {
         <spotLight position={[0, 4, 0]} />
         {introDone ? (
           <>
-            <fogExp2 attach={"fog"} color={section === "black" ? "black" : section === "white" ? "white" : "black"} density={0.025} />
+            {/* <fogExp2 attach={"fog"} color={section === "black" ? "black" : section === "white" ? "white" : "black"} density={0.025} /> */}
             <ambientLight intensity={1} />
             <InfinitePlane />
           </>
@@ -50,9 +50,9 @@ const Scene = () => {
           <Intro scale={10} rotation={[Math.PI / 2, 0, 0]} />
         )}
         <BakeShadows />
-        <EffectComposer>
-          <Fluid  fluidColor="#222" swirl={1}/>
-        </EffectComposer>
+        {/* <EffectComposer> */}
+        {/*   <Fluid  fluidColor="#222" swirl={1}/> */}
+        {/* </EffectComposer> */}
         <PanControls />
       </Canvas>
     </div>
