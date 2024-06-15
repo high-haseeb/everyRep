@@ -42,7 +42,7 @@ const Scene = () => {
         <spotLight position={[0, 4, 0]} />
         {introDone ? (
           <>
-            {/* <fogExp2 attach={"fog"} color={section === "black" ? "black" : section === "white" ? "white" : "black"} density={0.025} /> */}
+            <fogExp2 attach={"fog"} color={section === "black" ? "black" : section === "white" ? "white" : "black"} density={0.025} />
             <ambientLight intensity={1} />
             <InfinitePlane />
           </>
