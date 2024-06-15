@@ -7,7 +7,7 @@ const Overlay = () => {
   const { setSection, section } = useStateStore();
 
   return (
-    <div className="w-screen h-screen absolute top-0 left-0 z-50 pointer-events-none font-sans text-5xl lg:text-7xl font-bold transition-colors " >
+    <div className="w-screen h-screen absolute top-0 left-0 z-50 pointer-events-none font-sans text-5xl lg:text-7xl font-bold transition-colors" >
       {/* <Image src={"/images/logo_name.jpg"} width={150} height={100} alt="logo" className="absolute top-10 left-10" /> */}
       <div className="w-full h-full relative">
         {section === "home" ? (

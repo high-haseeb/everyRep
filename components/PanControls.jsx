@@ -60,7 +60,6 @@ export default function PanControls() {
     camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - z));
     camera.position.x = lerp(camera.position.x, x, 0.1);
     camera.position.y = lerp(camera.position.y, y, 0.1);
-
   });
   return (
     <>
@@ -68,7 +67,7 @@ export default function PanControls() {
         <Cloud position={[10, 1, 0]} bounds={new THREE.Vector3(1, 1, 20)} opacity={0.4} />
         <Cloud position={[-10, 1, 0]} bounds={new THREE.Vector3(1, 1, 20)} opacity={0.4} />
       </Clouds>
-      <MapControls enableRotate={false} enableZoom={false} enableDamping={true} enabled={introDone} />
+      <MapControls enableRotate={false} enableZoom={false} enableDamping={true} enabled={introDone} makeDefault dampingFactor={0.1} panSpeed={0.02}/>
     </>
   );
 }
