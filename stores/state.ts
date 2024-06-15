@@ -8,7 +8,7 @@ interface State {
 }
 
 export const useStateStore = create<State>()((set) => ({
-  introDone: true,
+  introDone: false,
   section: 'home',
 
   setIntroDone: (introDone) => set({ introDone }),
